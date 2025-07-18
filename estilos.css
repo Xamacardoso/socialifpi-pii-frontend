@@ -1,12 +1,13 @@
 /* Variáveis de cor */
 :root {
-    --cor-principal: #1A1A1A; /* Cinza escuro quase preto */
+    --cor-principal: #661ad7; /* Cinza escuro quase preto */
     --cor-secundaria: #333333; /* Cinza escuro */
     --cor-fundo: #121212; /* Preto para o fundo */
     --cor-texto: #EAEAEA; /* Cinza claro para o texto */
     --cor-texto-secundario: #CCCCCC; /* Cinza um pouco mais escuro para textos secundários */
     --cor-borda: #444444; /* Cinza escuro para bordas */
     --cor-hover: #555555; /* Cinza intermediário para efeitos hover */
+    --cor-bg-input: #1a1a1a;
 }
 
 /* Reset básico */
@@ -72,6 +73,10 @@ main {
     padding: 0 20px;
 }
 
+button {
+    padding: 10px 20px;
+}
+
 section#formulario {
     margin-bottom: 20px;
     padding: 15px;
@@ -101,7 +106,7 @@ section#formulario {
     border: 1px solid var(--cor-borda);
     border-radius: 5px;
     font-size: 1rem;
-    background-color: var(--cor-principal);
+    background-color: var(--cor-bg-input);
     color: var(--cor-texto);
 }
 
@@ -246,6 +251,8 @@ footer p {
     font-weight: bold;
 }
 
+
+
 .comentarios-section {
     margin-top: 20px;
     padding-top: 15px;
@@ -278,11 +285,11 @@ footer p {
     font-style: italic;
 }
 
-.botao-excluir {
+.botao-excluir-comentario {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: #722f2f;
+    background-color: #d11c1c !important;
     color: white;
     border: none;
     border-radius: 4px;
@@ -291,10 +298,26 @@ footer p {
     padding: 3px 6px;
 }
 
-.botao-excluir:hover {
-    background-color: #a54848;
+.botao-excluir-comentario:hover {
+    background-color: #9b1414 !important;
 }
 
+.botao-excluir-post {
+    background-color: #d32f2f !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 5px;
+    margin-left: auto;
+    display: block;
+    justify-self: end;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.botao-excluir-post:hover {
+    background-color: #8b1616 !important;
+}
 
 /* Formulário de Comentário */
 .form-comentario {
@@ -311,7 +334,7 @@ footer p {
     border: 1px solid var(--cor-borda);
     border-radius: 5px;
     font-size: 1rem;
-    background-color: var(--cor-principal);
+    background-color: var(--cor-bg-input);
     color: var(--cor-texto);
 }
 

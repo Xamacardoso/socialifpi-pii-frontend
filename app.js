@@ -52,29 +52,36 @@ function criarElementoPostagem(postagem) {
     article.id = `post-${postagem._id}`;
     // Conteúdo, data e curtidas
     article.innerHTML = `
-        <h2>${postagem.titulo}</h2>
-        <p>${postagem.conteudo}</p>
-        <p class="data">Publicado em: ${new Date(postagem.data).toLocaleDateString()}</p>
-        <div class="curtidas-container">
+            <div class="post-header">
+            <h2>${postagem.titulo}</h2>
+            </div>
+            <p>${postagem.conteudo}</p>
+            <p class="data">Publicado em: ${new Date(postagem.data).toLocaleDateString()}</p>
+            <div class="curtidas-container">
             <span id="curtidas-${postagem._id}">Curtidas: ${postagem.curtidas}</span>
             <button class="botao-curtir">Curtir 👍</button>
-        </div>
-        <div class="comentarios-section">
+            </div>
+            <div class="comentarios-section">
             <h3>Comentários</h3>
             <div id="comentarios-list-${postagem._id}">
-                ${postagem.comentarios && postagem.comentarios.length > 0 ?
+            ${postagem.comentarios && postagem.comentarios.length > 0 ?
         postagem.comentarios.map(c => criarHtmlComentario(postagem._id, c)).join('') :
         '<p class="sem-comentarios">Ainda não há comentários.</p>'}
             </div>
             <form class="form-comentario">
-                <h4>Deixe um comentário</h4>
-                <input type="text" name="autor" placeholder="Seu nome" required />
-                <textarea name="conteudo" placeholder="Escreva seu comentário..." required rows="3"></textarea>
-                <button type="submit">Comentar</button>
+            <h4>Deixe um comentário</h4>
+            <input type="text" name="autor" placeholder="Seu nome" required />
+            <textarea name="conteudo" placeholder="Escreva seu comentário..." required rows="3"></textarea>
+            <button type="submit">Comentar</button>
             </form>
-        </div>
+            </div>
+            <button class="botao-excluir-post" title="Excluir esta postagem">Excluir Postagem 🗑️</button>
     `;
     // --- Adicionar Event Listeners ---
+    const botaoExcluirPost = article.querySelector('.botao-excluir-post');
+    if (botaoExcluirPost) {
+        botaoExcluirPost.addEventListener('click', () => excluirPostagem(postagem._id));
+    }
     const botaoCurtir = article.querySelector('.botao-curtir');
     if (botaoCurtir) {
         botaoCurtir.addEventListener('click', () => curtirPostagem(postagem._id));
@@ -93,7 +100,7 @@ function criarElementoPostagem(postagem) {
         });
     }
     // Adicionar listeners para os botões de excluir dos comentários já existentes
-    const botoesExcluir = article.querySelectorAll('.botao-excluir');
+    const botoesExcluir = article.querySelectorAll('.botao-excluir-comentario');
     botoesExcluir.forEach(botao => {
         const comentarioId = botao.getAttribute('data-comentario-id');
         if (comentarioId) {
@@ -110,7 +117,7 @@ function criarHtmlComentario(postId, comentario) {
         <div class="comentario" id="comentario-${comentario._id}">
             <p><strong>${comentario.autor}</strong> disse:</p>
             <p>${comentario.conteudo}</p>
-            <button class="botao-excluir" data-comentario-id="${comentario._id}">Excluir</button>
+            <button class="botao-excluir-comentario" data-comentario-id="${comentario._id}">Excluir</button>
         </div>
     `;
 }
@@ -134,6 +141,33 @@ function incluirPostagem() {
             yield listarPostagens();
             tituloInput.value = '';
             conteudoInput.value = '';
+        }
+    });
+}
+/**
+ * Remove uma postagem da API e da interface.
+ */
+function excluirPostagem(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Pede confirmação ao usuário antes de uma ação destrutiva
+        if (confirm("Você tem certeza que deseja excluir esta postagem? Esta ação não pode ser desfeita.")) {
+            try {
+                const response = yield fetch(`${apiUrl}/${id}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) {
+                    throw new Error(`Erro na API ao tentar excluir: ${response.statusText}`);
+                }
+                // Remove o elemento da postagem da tela para atualizar a interface
+                const postElement = getById(`post-${id}`);
+                if (postElement) {
+                    postElement.remove();
+                }
+            }
+            catch (error) {
+                console.error("Erro ao excluir a postagem:", error);
+                alert("Não foi possível excluir a postagem. Tente novamente.");
+            }
         }
     });
 }
