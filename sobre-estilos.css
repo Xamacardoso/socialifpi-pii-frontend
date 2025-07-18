@@ -1,0 +1,87 @@
+/* Estilos específicos para a página "Sobre" */
+
+/* Container principal da página sobre */
+#sobre-projeto {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Espaçamento entre os cards */
+}
+
+/* Estilo base para todos os cards */
+.card {
+    background-color: var(--cor-secundaria);
+    border: 1px solid var(--cor-borda);
+    border-radius: 10px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efeito de flutuar ao passar o mouse */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(91, 33, 182, 0.4);
+}
+
+/* Títulos dentro dos cards */
+.card h2, .card h3 {
+    text-align: center;
+    color: var(--cor-texto-secundario);
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--cor-texto-secundario);
+    padding-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.card h3 {
+    font-size: 1.5rem;
+}
+
+/* Parágrafos e itens de lista dentro dos cards */
+.card p, .card li {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--cor-texto-secundario);
+}
+
+/* Estilização da lista de funcionalidades/tecnologias */
+.card ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.card li {
+    padding-left: 1.8em; /* Espaço para o ícone */
+    position: relative;
+    margin-bottom: 12px;
+}
+
+/* Adiciona um ícone de "check" antes de cada item da lista */
+.card li::before {
+    content: '✓'; /* Você pode trocar por outros ícones, como '✔', '►', '•' */
+    color: var(--cor-principal);
+    font-weight: bold;
+    font-size: 1.2rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* Container para os cards que ficam lado a lado */
+.card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas de tamanho igual */
+    gap: 30px;
+}
+
+/* Responsividade: em telas menores, os cards ficam um abaixo do outro */
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: 1fr; /* Uma coluna */
+    }
+
+    .card h2, .card h3 {
+        font-size: 1.5rem;
+    }
+}
