@@ -411,3 +411,29 @@ footer p {
 .modal-button.cancel:hover {
     background-color: var(--cor-principal);
 }
+
+/* Estilos para a barra de pesquisa */
+#pesquisa {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 10px;
+    background-color: var(--cor-secundaria);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#pesquisa h2 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: var(--cor-texto-secundario);
+}
+
+#pesquisaInput {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: var(--cor-bg-input);
+    color: var(--cor-texto);
+}

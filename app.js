@@ -51,18 +51,32 @@ function showConfirmationModal(message, onConfirm) {
  */
 function listarPostagens() {
     return __awaiter(this, void 0, void 0, function* () {
+        const pesquisaInput = getById('pesquisaInput');
         try {
             const response = yield fetch(apiUrl);
             if (!response.ok) {
                 throw new Error(`Erro na rede: ${response.statusText}`);
             }
-            const postagens = yield response.json();
+            let postagens = yield response.json();
+            // Filtra as postagens com base no termo de pesquisa
+            const termoPesquisa = (pesquisaInput === null || pesquisaInput === void 0 ? void 0 : pesquisaInput.value.toLowerCase()) || '';
+            if (termoPesquisa) {
+                postagens = postagens.filter(postagem => postagem.titulo.toLowerCase().includes(termoPesquisa) ||
+                    postagem.conteudo.toLowerCase().includes(termoPesquisa) ||
+                    postagem.comentarios.some(comentario => comentario.autor.toLowerCase().includes(termoPesquisa)));
+            }
             const postagensElement = getById('postagens');
             if (postagensElement) {
-                postagensElement.innerHTML = ''; // Limpa a lista antes de recarregar
-                postagens.forEach(postagem => {
-                    postagensElement.appendChild(criarElementoPostagem(postagem));
-                });
+                postagensElement.innerHTML = ''; // Limpa a lista
+                if (postagens.length === 0) {
+                    // Mensagem para quando não há resultados
+                    postagensElement.innerHTML = '<p>Nenhuma postagem encontrada.</p>';
+                }
+                else {
+                    postagens.forEach(postagem => {
+                        postagensElement.appendChild(criarElementoPostagem(postagem));
+                    });
+                }
             }
         }
         catch (error) {
@@ -264,6 +278,11 @@ function excluirComentario(postId, comentarioId) {
 const botaoNovaPostagem = getById("botaoNovaPostagem");
 if (botaoNovaPostagem) {
     botaoNovaPostagem.addEventListener('click', incluirPostagem);
+}
+// Adiciona o listener para o input de pesquisa
+const pesquisaInput = getById('pesquisaInput');
+if (pesquisaInput) {
+    pesquisaInput.addEventListener('input', () => listarPostagens());
 }
 // Carrega as postagens do feed ao iniciar
 listarPostagens();

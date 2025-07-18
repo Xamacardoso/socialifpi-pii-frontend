@@ -66,20 +66,38 @@ function showConfirmationModal(message: string, onConfirm: () => void) {
  * Busca todas as postagens da API e as renderiza na página.
  */
 async function listarPostagens(): Promise<void> {
+    const pesquisaInput = getById('pesquisaInput') as HTMLInputElement | null;
 
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) {
             throw new Error(`Erro na rede: ${response.statusText}`);
         }
-        const postagens: Postagem[] = await response.json();
+        let postagens: Postagem[] = await response.json();
+
+        // Filtra as postagens com base no termo de pesquisa
+        const termoPesquisa = pesquisaInput?.value.toLowerCase() || '';
+        if (termoPesquisa) {
+            postagens = postagens.filter(postagem =>
+                postagem.titulo.toLowerCase().includes(termoPesquisa) ||
+                postagem.conteudo.toLowerCase().includes(termoPesquisa) ||
+                postagem.comentarios.some(comentario =>
+                    comentario.autor.toLowerCase().includes(termoPesquisa)
+                )
+            );
+        }
 
         const postagensElement = getById('postagens');
         if (postagensElement) {
-            postagensElement.innerHTML = ''; // Limpa a lista antes de recarregar
-            postagens.forEach(postagem => {
-                postagensElement.appendChild(criarElementoPostagem(postagem));
-            });
+            postagensElement.innerHTML = ''; // Limpa a lista
+            if (postagens.length === 0) {
+                // Mensagem para quando não há resultados
+                postagensElement.innerHTML = '<p>Nenhuma postagem encontrada.</p>';
+            } else {
+                postagens.forEach(postagem => {
+                    postagensElement.appendChild(criarElementoPostagem(postagem));
+                });
+            }
         }
     } catch (error) {
         console.error("Falha ao buscar postagens:", error);
@@ -298,6 +316,12 @@ async function excluirComentario(postId: string, comentarioId: string): Promise<
 const botaoNovaPostagem = getById("botaoNovaPostagem");
 if (botaoNovaPostagem) {
     botaoNovaPostagem.addEventListener('click', incluirPostagem);
+}
+
+// Adiciona o listener para o input de pesquisa
+const pesquisaInput = getById('pesquisaInput') as HTMLInputElement | null;
+if (pesquisaInput) {
+    pesquisaInput.addEventListener('input', () => listarPostagens());
 }
 
 // Carrega as postagens do feed ao iniciar
