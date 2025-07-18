@@ -125,7 +125,7 @@ function criarElementoPostagem(postagem: Postagem): HTMLElement {
             <p>${postagem.conteudo}</p>
             <p class="data">Publicado em: ${new Date(postagem.data).toLocaleDateString()}</p>
             <div class="curtidas-container">
-            <span id="curtidas-${postagem._id}">Curtidas: ${postagem.curtidas}</span>
+            <span id="curtidas-${postagem._id}">Curtidas: ${postagem.curtidas} ❤️</span>
             <button class="botao-curtir">Curtir 👍</button>
             </div>
             <div class="comentarios-section">
@@ -140,7 +140,9 @@ function criarElementoPostagem(postagem: Postagem): HTMLElement {
             <h4>Deixe um comentário</h4>
             <input type="text" name="autor" placeholder="Seu nome" required />
             <textarea name="conteudo" placeholder="Escreva seu comentário..." required rows="3"></textarea>
+            <div class="comment-form-actions">
             <button type="submit">Comentar</button>
+            </div>
             </form>
             </div>
             <div class="post-actions">
@@ -267,7 +269,7 @@ async function curtirPostagem(id: string): Promise<void> {
         const curtidasElement = getById(`curtidas-${id}`);
         
         if (curtidasElement) {
-            curtidasElement.textContent = `Curtidas: ${postagemAtualizada.curtidas}`;
+            curtidasElement.textContent = `Curtidas: ${postagemAtualizada.curtidas} ❤️`;
         }
 
     } catch (error) {
