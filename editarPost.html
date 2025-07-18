@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Postagem - Social IFPI</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1>Social IFPI</h1>
+            <p>Editando postagem</p>
+        </header>
+        <main>
+            <section id="formulario-edicao">
+                <div class="campos">
+                    <h2>Editar Postagem</h2>
+                    <form id="formEditar">
+                        <label for="titulo">Título:</label>
+                        <input type="text" id="titulo" name="titulo" required>
+                        <br>
+                        <label for="conteudo">Conteúdo:</label>
+                        <textarea id="conteudo" name="conteudo" required rows="10"></textarea>
+                        <br>
+                        <div class="botoes-edicao">
+                            <button type="submit" id="botaoSalvar">Salvar Alterações</button>
+                            <a href="index.html" class="botao-cancelar">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2024 Social IFPI. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+    <script src="editarPost.js"></script>
+</body>
+</html>

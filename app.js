@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 // --- FUNÇÕES AUXILIARES E CONSTANTES ---
-const apiUrl = 'http://localhost:3000/socialifpi/postagem';
+const baseApiUrl = 'http://localhost:3000/socialifpi/postagem';
 function getById(id) {
     return document.getElementById(id);
 }
@@ -53,7 +53,7 @@ function listarPostagens() {
     return __awaiter(this, void 0, void 0, function* () {
         const pesquisaInput = getById('pesquisaInput');
         try {
-            const response = yield fetch(apiUrl);
+            const response = yield fetch(baseApiUrl);
             if (!response.ok) {
                 throw new Error(`Erro na rede: ${response.statusText}`);
             }
@@ -121,7 +121,10 @@ function criarElementoPostagem(postagem) {
             <button type="submit">Comentar</button>
             </form>
             </div>
-            <button class="botao-excluir-post" title="Excluir esta postagem">Excluir Postagem 🗑️</button>
+            <div class="post-actions">
+                <a href="editarPost.html?id=${postagem._id}" class="botao-editar-post" title="Editar esta postagem">Editar ✏️</a>
+                <button class="botao-excluir-post" title="Excluir esta postagem">Excluir Postagem🗑️</button>
+            </div>
     `;
     // --- Adicionar Event Listeners ---
     const botaoExcluirPost = article.querySelector('.botao-excluir-post');
@@ -179,7 +182,7 @@ function incluirPostagem() {
                 titulo: tituloInput.value,
                 conteudo: conteudoInput.value,
             };
-            yield fetch(apiUrl, {
+            yield fetch(baseApiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(novoPost)
@@ -198,7 +201,7 @@ function excluirPostagem(id) {
         // Pede confirmação ao usuário antes de uma ação destrutiva
         const onConfirmAction = () => __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+                const response = yield fetch(`${baseApiUrl}/${id}`, { method: 'DELETE' });
                 if (!response.ok) {
                     throw new Error(`Erro na API ao tentar excluir: ${response.statusText}`);
                 }
@@ -222,7 +225,7 @@ function excluirPostagem(id) {
 function curtirPostagem(id) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield fetch(`${apiUrl}/${id}/curtir`, { method: 'POST' });
+            const response = yield fetch(`${baseApiUrl}/${id}/curtir`, { method: 'POST' });
             if (!response.ok) {
                 throw new Error(`Erro ao curtir postagem: ${response.statusText}`);
             }
@@ -242,7 +245,7 @@ function curtirPostagem(id) {
  */
 function adicionarComentario(postId, autor, conteudo) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch(`${apiUrl}/${postId}/comentario`, {
+        const response = yield fetch(`${baseApiUrl}/${postId}/comentario`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ autor, conteudo })
@@ -258,7 +261,7 @@ function excluirComentario(postId, comentarioId) {
     return __awaiter(this, void 0, void 0, function* () {
         const onConfirmAction = () => __awaiter(this, void 0, void 0, function* () {
             try {
-                yield fetch(`${apiUrl}/${postId}/comentario/${comentarioId}`, {
+                yield fetch(`${baseApiUrl}/${postId}/comentario/${comentarioId}`, {
                     method: 'DELETE'
                 });
                 const comentarioElement = getById(`comentario-${comentarioId}`);

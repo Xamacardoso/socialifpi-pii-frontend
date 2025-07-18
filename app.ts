@@ -16,7 +16,7 @@ interface Postagem {
 }
 
 // --- FUNÇÕES AUXILIARES E CONSTANTES ---
-const apiUrl = 'http://localhost:3000/socialifpi/postagem';
+const baseApiUrl = 'http://localhost:3000/socialifpi/postagem';
 
 function getById(id: string): HTMLElement | null {
     return document.getElementById(id);
@@ -69,7 +69,7 @@ async function listarPostagens(): Promise<void> {
     const pesquisaInput = getById('pesquisaInput') as HTMLInputElement | null;
 
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(baseApiUrl);
         if (!response.ok) {
             throw new Error(`Erro na rede: ${response.statusText}`);
         }
@@ -143,7 +143,10 @@ function criarElementoPostagem(postagem: Postagem): HTMLElement {
             <button type="submit">Comentar</button>
             </form>
             </div>
-            <button class="botao-excluir-post" title="Excluir esta postagem">Excluir Postagem 🗑️</button>
+            <div class="post-actions">
+                <a href="editarPost.html?id=${postagem._id}" class="botao-editar-post" title="Editar esta postagem">Editar ✏️</a>
+                <button class="botao-excluir-post" title="Excluir esta postagem">Excluir Postagem🗑️</button>
+            </div>
     `;
     
     // --- Adicionar Event Listeners ---
@@ -209,7 +212,7 @@ async function incluirPostagem(): Promise<void> {
             conteudo: conteudoInput.value,
         };
 
-        await fetch(apiUrl, {
+        await fetch(baseApiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(novoPost)
@@ -228,7 +231,7 @@ async function excluirPostagem(id: string): Promise<void> {
     // Pede confirmação ao usuário antes de uma ação destrutiva
     const onConfirmAction = async () => {
         try {
-            const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            const response = await fetch(`${baseApiUrl}/${id}`, { method: 'DELETE' });
             if (!response.ok) {
                 throw new Error(`Erro na API ao tentar excluir: ${response.statusText}`);
             }
@@ -254,7 +257,7 @@ async function excluirPostagem(id: string): Promise<void> {
  */
 async function curtirPostagem(id: string): Promise<void> {
     try {
-        const response = await fetch(`${apiUrl}/${id}/curtir`, { method: 'POST' });
+        const response = await fetch(`${baseApiUrl}/${id}/curtir`, { method: 'POST' });
 
         if (!response.ok) {
             throw new Error(`Erro ao curtir postagem: ${response.statusText}`);
@@ -276,7 +279,7 @@ async function curtirPostagem(id: string): Promise<void> {
  * Adiciona um comentário a uma postagem.
  */
 async function adicionarComentario(postId: string, autor: string, conteudo: string): Promise<void> {
-    const response = await fetch(`${apiUrl}/${postId}/comentario`, {
+    const response = await fetch(`${baseApiUrl}/${postId}/comentario`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ autor, conteudo })
@@ -292,7 +295,7 @@ async function adicionarComentario(postId: string, autor: string, conteudo: stri
 async function excluirComentario(postId: string, comentarioId: string): Promise<void> {
     const onConfirmAction = async () => {
         try {
-            await fetch(`${apiUrl}/${postId}/comentario/${comentarioId}`, {
+            await fetch(`${baseApiUrl}/${postId}/comentario/${comentarioId}`, {
                 method: 'DELETE'
             });
             const comentarioElement = getById(`comentario-${comentarioId}`);

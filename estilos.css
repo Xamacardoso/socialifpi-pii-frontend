@@ -437,3 +437,81 @@ footer p {
     background-color: var(--cor-bg-input);
     color: var(--cor-texto);
 }
+
+/* Edicoes e afins */
+
+.post-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.botao-editar-post {
+    background-color: #1c7ed1 !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    line-height: normal;
+    display: inline-block;
+}
+
+.botao-editar-post:hover {
+    background-color: #1666a7 !important;
+}
+
+.botao-excluir-post {
+    background-color: var(--cor-excluir-btn) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+/* Estilos para a página de edição */
+#formulario-edicao .campos {
+    padding: 20px;
+}
+
+#formulario-edicao textarea {
+    min-height: 200px;
+}
+
+.botoes-edicao {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.botoes-edicao button, .botoes-edicao .botao-cancelar {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+}
+
+#botaoSalvar {
+    background-color: var(--cor-principal);
+}
+
+#botaoSalvar:hover {
+    background-color: var(--cor-hover);
+}
+
+.botoes-edicao .botao-cancelar {
+    background-color: var(--cor-texto-secundario);
+}
+
+.botoes-edicao .botao-cancelar:hover {
+    background-color: var(--cor-hover);
+}
