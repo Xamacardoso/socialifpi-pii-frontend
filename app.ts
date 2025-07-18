@@ -124,34 +124,55 @@ function criarElementoPostagem(postagem: Postagem): HTMLElement {
             </div>
             <p>${postagem.conteudo}</p>
             <p class="data">Publicado em: ${new Date(postagem.data).toLocaleDateString()}</p>
-            <div class="curtidas-container">
-            <span id="curtidas-${postagem._id}">Curtidas: ${postagem.curtidas} ❤️</span>
-            <button class="botao-curtir">Curtir 👍</button>
-            </div>
             <div class="comentarios-section">
-            <h3>Comentários</h3>
-            <div id="comentarios-list-${postagem._id}">
-            ${postagem.comentarios && postagem.comentarios.length > 0 ? 
-                postagem.comentarios.map(c => criarHtmlComentario(postagem._id, c)).join('') : 
-                '<p class="sem-comentarios">Ainda não há comentários.</p>'
-            }
-            </div>
-            <form class="form-comentario">
-            <h4>Deixe um comentário</h4>
-            <input type="text" name="autor" placeholder="Seu nome" required />
-            <textarea name="conteudo" placeholder="Escreva seu comentário..." required rows="3"></textarea>
-            <div class="comment-form-actions">
-            <button type="submit">Comentar</button>
-            </div>
-            </form>
+                <div class="comentarios-header">
+                    <h3>Comentários</h3>
+                    <button class="botao-toggle-comentarios" aria-label="Mostrar comentários">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="comentarios-conteudo" style="display: none;">
+                    <div id="comentarios-list-${postagem._id}">
+                    ${postagem.comentarios && postagem.comentarios.length > 0 ? 
+                        postagem.comentarios.map(c => criarHtmlComentario(postagem._id, c)).join('') : 
+                        '<p class="sem-comentarios">Ainda não há comentários.</p>'
+                    }
+                    </div>
+                    <form class="form-comentario">
+                        <h4>Deixe um comentário</h4>
+                        <input type="text" name="autor" placeholder="Seu nome" required />
+                        <textarea name="conteudo" placeholder="Escreva seu comentário..." required rows="3"></textarea>
+                        <div class="comment-form-actions">
+                            <button type="submit">Comentar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="post-actions">
+                <span class="curtidas-texto" id="curtidas-${postagem._id}">Curtidas: ${postagem.curtidas} ❤️</span>
+                <button class="botao-curtir">Curtir 👍</button>
                 <a href="editarPost.html?id=${postagem._id}" class="botao-editar-post" title="Editar esta postagem">Editar ✏️</a>
                 <button class="botao-excluir-post" title="Excluir esta postagem">Excluir Postagem🗑️</button>
             </div>
     `;
     
     // --- Adicionar Event Listeners ---
+    const botaoToggle = article.querySelector('.botao-toggle-comentarios');
+    const comentariosConteudo = article.querySelector('.comentarios-conteudo') as HTMLElement;
+
+    if (botaoToggle && comentariosConteudo) {
+        botaoToggle.addEventListener('click', () => {
+            const isHidden = comentariosConteudo.style.display === 'none';
+            comentariosConteudo.style.display = isHidden ? 'block' : 'none';
+            const icon = botaoToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-chevron-down', 'fa-chevron-up');
+                icon.classList.add(isHidden ? 'fa-chevron-up' : 'fa-chevron-down');
+            }
+            botaoToggle.setAttribute('aria-label', isHidden ? 'Ocultar comentários' : 'Mostrar comentários');
+        });
+    }
+
     const botaoExcluirPost = article.querySelector('.botao-excluir-post');
     if (botaoExcluirPost) {
         botaoExcluirPost.addEventListener('click', () => excluirPostagem(postagem._id));
@@ -281,14 +302,49 @@ async function curtirPostagem(id: string): Promise<void> {
  * Adiciona um comentário a uma postagem.
  */
 async function adicionarComentario(postId: string, autor: string, conteudo: string): Promise<void> {
-    const response = await fetch(`${baseApiUrl}/${postId}/comentario`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ autor, conteudo })
-    });
-    
-    // Após adicionar, simplesmente recarrega todo o feed para simplicidade
-    await listarPostagens();
+    try {
+        const response = await fetch(`${baseApiUrl}/${postId}/comentario`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ autor, conteudo })
+        });
+
+        if (!response.ok) {
+            throw new Error('Falha ao adicionar o comentário.');
+        }
+
+        const postagem: Postagem = await response.json();
+        const novoComentario: Comentario = postagem.comentarios[postagem.comentarios.length - 1];
+
+        const comentariosList = getById(`comentarios-list-${postId}`);
+        if (comentariosList) {
+            // Remove a mensagem "Ainda não há comentários" se ela existir
+            const semComentariosMsg = comentariosList.querySelector('.sem-comentarios');
+            if (semComentariosMsg) {
+                semComentariosMsg.remove();
+            }
+
+            // Adiciona o HTML do novo comentário ao final da lista
+            comentariosList.insertAdjacentHTML('beforeend', criarHtmlComentario(postId, novoComentario));
+
+            // Adiciona o listener de evento para o botão de excluir do novo comentário
+            const novoBotaoExcluir = comentariosList.querySelector(`[data-comentario-id="${novoComentario._id}"]`);
+            if (novoBotaoExcluir) {
+                novoBotaoExcluir.addEventListener('click', () => excluirComentario(postId, novoComentario._id));
+            }
+        }
+
+        // Limpa os campos do formulário de comentário
+        const form = getById(`post-${postId}`)?.querySelector('.form-comentario');
+        if (form) {
+            (form.querySelector('input[name="autor"]') as HTMLInputElement).value = '';
+            (form.querySelector('textarea[name="conteudo"]') as HTMLTextAreaElement).value = '';
+        }
+
+    } catch (error) {
+        console.error("Erro ao adicionar comentário:", error);
+        alert("Não foi possível adicionar o seu comentário.");
+    }
 }
 
 /**
