@@ -229,3 +229,96 @@ footer p {
         margin-bottom: 5px;
     }
 }
+
+
+/* --- ESTILOS ADICIONAIS PARA COMENTÁRIOS --- */
+
+.curtidas-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.curtidas-container span {
+    font-weight: bold;
+}
+
+.comentarios-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.comentarios-section h3 {
+    margin-bottom: 15px;
+    color: var(--cor-texto-secundario);
+}
+
+.comentario {
+    background-color: var(--cor-principal);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.comentario p {
+    margin: 0;
+    color: var(--cor-texto-secundario);
+}
+.comentario p strong {
+    color: var(--cor-texto);
+}
+
+.sem-comentarios {
+    color: var(--cor-texto-secundario);
+    font-style: italic;
+}
+
+.botao-excluir {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #722f2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 3px 6px;
+}
+
+.botao-excluir:hover {
+    background-color: #a54848;
+}
+
+
+/* Formulário de Comentário */
+.form-comentario {
+    margin-top: 20px;
+}
+.form-comentario h4 {
+    margin-bottom: 10px;
+}
+
+.form-comentario input, .form-comentario textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: var(--cor-principal);
+    color: var(--cor-texto);
+}
+
+.form-comentario button {
+    padding: 8px 15px;
+    background-color: var(--cor-secundaria);
+}
+.form-comentario button:hover {
+    background-color: var(--cor-hover);
+}
