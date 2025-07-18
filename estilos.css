@@ -8,6 +8,9 @@
     --cor-borda: #444444; /* Cinza escuro para bordas */
     --cor-hover: #555555; /* Cinza intermediário para efeitos hover */
     --cor-bg-input: #1a1a1a;
+
+    --cor-excluir-btn: #d11c1c;
+    --cor-excluir-btn-hover: #9b1414;
 }
 
 /* Reset básico */
@@ -289,7 +292,7 @@ footer p {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: #d11c1c !important;
+    background-color: var(--cor-excluir-btn) !important;
     color: white;
     border: none;
     border-radius: 4px;
@@ -299,11 +302,11 @@ footer p {
 }
 
 .botao-excluir-comentario:hover {
-    background-color: #9b1414 !important;
+    background-color: var(--cor-excluir-btn-hover) !important;
 }
 
 .botao-excluir-post {
-    background-color: #d32f2f !important;
+    background-color: var(--cor-excluir-btn) !important;
     color: #fff !important;
     border: none;
     border-radius: 5px;
@@ -316,7 +319,7 @@ footer p {
 }
 
 .botao-excluir-post:hover {
-    background-color: #8b1616 !important;
+    background-color: var(--cor-excluir-btn-hover) !important;
 }
 
 /* Formulário de Comentário */
@@ -344,4 +347,67 @@ footer p {
 }
 .form-comentario button:hover {
     background-color: var(--cor-hover);
+}
+
+/* --- ESTILOS ADICIONAIS PARA JANELA MODAL DE CONFIRMAÇÃO --- */
+
+.modal-overlay {
+    position: fixed; /* Fixa na tela */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo preto semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Garante que fique na frente de tudo */
+}
+
+.modal-content {
+    background-color: var(--cor-secundaria);
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid var(--cor-borda);
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-content p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: var(--cor-texto);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-button {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-button.confirm {
+    background-color: var(--cor-excluir-btn); /* Vermelho para confirmar a exclusão */
+    color: white;
+}
+.modal-button.confirm:hover {
+    background-color: var(--cor-excluir-btn-hover);
+}
+
+.modal-button.cancel {
+    background-color: var(--cor-hover);
+    color: white;
+}
+.modal-button.cancel:hover {
+    background-color: var(--cor-principal);
 }

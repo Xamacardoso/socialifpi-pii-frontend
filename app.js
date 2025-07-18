@@ -13,6 +13,38 @@ const apiUrl = 'http://localhost:3000/socialifpi/postagem';
 function getById(id) {
     return document.getElementById(id);
 }
+function showConfirmationModal(message, onConfirm) {
+    var _a, _b;
+    const modal = getById('confirmationModal');
+    const modalMessage = getById('modalMessage');
+    const confirmButton = getById('modalConfirmButton');
+    const cancelButton = getById('modalCancelButton');
+    if (!modal || !modalMessage || !confirmButton || !cancelButton) {
+        console.error("Erro: Elementos do modal de confirmação não foram encontrados no HTML!");
+        return;
+    }
+    // Define a mensagem e torna o modal visível
+    modalMessage.textContent = message;
+    modal.style.display = 'flex';
+    // Clona os botões para remover event listeners antigos e evitar cliques múltiplos
+    const newConfirmButton = confirmButton.cloneNode(true);
+    const newCancelButton = cancelButton.cloneNode(true);
+    (_a = confirmButton.parentNode) === null || _a === void 0 ? void 0 : _a.replaceChild(newConfirmButton, confirmButton);
+    (_b = cancelButton.parentNode) === null || _b === void 0 ? void 0 : _b.replaceChild(newCancelButton, cancelButton);
+    // Função para esconder o modal
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+    // Adiciona o evento de clique ao botão de confirmar
+    newConfirmButton.addEventListener('click', () => {
+        onConfirm(); // Executa a ação de exclusão
+        closeModal();
+    });
+    // Adiciona o evento de clique ao botão de cancelar
+    newCancelButton.addEventListener('click', () => {
+        closeModal();
+    });
+}
 // --- FUNÇÕES PRINCIPAIS DA APLICAÇÃO ---
 /**
  * Busca todas as postagens da API e as renderiza na página.
@@ -150,15 +182,12 @@ function incluirPostagem() {
 function excluirPostagem(id) {
     return __awaiter(this, void 0, void 0, function* () {
         // Pede confirmação ao usuário antes de uma ação destrutiva
-        if (confirm("Você tem certeza que deseja excluir esta postagem? Esta ação não pode ser desfeita.")) {
+        const onConfirmAction = () => __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield fetch(`${apiUrl}/${id}`, {
-                    method: 'DELETE'
-                });
+                const response = yield fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
                 if (!response.ok) {
                     throw new Error(`Erro na API ao tentar excluir: ${response.statusText}`);
                 }
-                // Remove o elemento da postagem da tela para atualizar a interface
                 const postElement = getById(`post-${id}`);
                 if (postElement) {
                     postElement.remove();
@@ -168,7 +197,9 @@ function excluirPostagem(id) {
                 console.error("Erro ao excluir a postagem:", error);
                 alert("Não foi possível excluir a postagem. Tente novamente.");
             }
-        }
+        });
+        // Chama o modal com a mensagem e a ação a ser executada
+        showConfirmationModal("Você tem certeza que deseja excluir esta postagem? Esta ação não pode ser desfeita.", onConfirmAction);
     });
 }
 /**
@@ -211,15 +242,22 @@ function adicionarComentario(postId, autor, conteudo) {
  */
 function excluirComentario(postId, comentarioId) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (confirm("Tem certeza que deseja excluir este comentário?")) {
-            yield fetch(`${apiUrl}/${postId}/comentario/${comentarioId}`, {
-                method: 'DELETE'
-            });
-            const comentarioElement = getById(`comentario-${comentarioId}`);
-            if (comentarioElement) {
-                comentarioElement.remove();
+        const onConfirmAction = () => __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield fetch(`${apiUrl}/${postId}/comentario/${comentarioId}`, {
+                    method: 'DELETE'
+                });
+                const comentarioElement = getById(`comentario-${comentarioId}`);
+                if (comentarioElement) {
+                    comentarioElement.remove();
+                }
             }
-        }
+            catch (error) {
+                console.error("Erro ao excluir o comentário:", error);
+                alert("Não foi possível excluir o comentário.");
+            }
+        });
+        showConfirmationModal("Tem certeza que deseja excluir este comentário?", onConfirmAction);
     });
 }
 // --- INICIALIZAÇÃO DA APLICAÇÃO ---
