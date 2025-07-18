@@ -16,6 +16,36 @@ const formEditar = document.getElementById('formEditar');
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('id');
 /**
+ * Exibe o modal de confirmacao na hora de salvar
+ */
+function showSaveModal(message, onConfirm) {
+    var _a, _b;
+    const modal = document.getElementById('confirmationModal');
+    const modalMessage = document.getElementById('modalMessage');
+    const confirmButton = document.getElementById('modalConfirmButton');
+    const cancelButton = document.getElementById('modalCancelButton');
+    if (!modal || !modalMessage || !confirmButton || !cancelButton) {
+        console.error("Erro: Elementos do modal de confirmação não foram encontrados no HTML!");
+        return;
+    }
+    modalMessage.textContent = message;
+    modal.style.display = 'flex';
+    const newConfirmButton = confirmButton.cloneNode(true);
+    const newCancelButton = cancelButton.cloneNode(true);
+    (_a = confirmButton.parentNode) === null || _a === void 0 ? void 0 : _a.replaceChild(newConfirmButton, confirmButton);
+    (_b = cancelButton.parentNode) === null || _b === void 0 ? void 0 : _b.replaceChild(newCancelButton, cancelButton);
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+    newConfirmButton.addEventListener('click', () => {
+        onConfirm();
+        closeModal();
+    });
+    newCancelButton.addEventListener('click', () => {
+        closeModal();
+    });
+}
+/**
  * Carrega os dados da postagem no formulário
  */
 function carregarPostagem() {
@@ -50,28 +80,29 @@ function atualizarPostagem(event) {
         event.preventDefault(); // Impede o recarregamento da página
         if (!postId)
             return;
-        const postAtualizado = {
-            titulo: tituloInput.value,
-            conteudo: conteudoInput.value,
-        };
-        try {
-            const response = yield fetch(`${apiUrl}/${postId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(postAtualizado),
-            });
-            if (!response.ok) {
-                throw new Error('Falha ao atualizar a postagem.');
+        const onConfirmAction = () => __awaiter(this, void 0, void 0, function* () {
+            const postAtualizado = {
+                titulo: tituloInput.value,
+                conteudo: conteudoInput.value,
+            };
+            try {
+                const response = yield fetch(`${apiUrl}/${postId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(postAtualizado),
+                });
+                if (!response.ok) {
+                    throw new Error('Falha ao atualizar a postagem.');
+                }
+                // O alerta foi removido daqui
+                window.location.href = 'index.html';
             }
-            alert("Postagem atualizada com sucesso!");
-            window.location.href = 'index.html'; // Redireciona para a página principal
-        }
-        catch (error) {
-            console.error("Erro ao atualizar postagem:", error);
-            alert("Erro ao salvar as alterações.");
-        }
+            catch (error) {
+                console.error("Erro ao atualizar postagem:", error);
+                alert("Erro ao salvar as alterações.");
+            }
+        });
+        showSaveModal("Você tem certeza que deseja salvar as alterações?", onConfirmAction);
     });
 }
 // Adiciona os event listeners quando o DOM estiver carregado

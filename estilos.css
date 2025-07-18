@@ -411,6 +411,14 @@ footer p {
     background-color: var(--cor-excluir-btn-hover);
 }
 
+.modal-button.save {
+    background-color: var(--cor-principal); /* Roxo para salvar */
+    color: white;
+}
+.modal-button.save:hover {
+    background-color: var(--cor-hover);
+}
+
 .modal-button.cancel {
     background-color: var(--cor-hover);
     color: white;
