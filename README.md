@@ -15,9 +15,6 @@ Uma plataforma de blog interativa desenvolvida como projeto prático para demons
 - [Como Executar](#como-executar)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [API Endpoints](#api-endpoints)
-- [Contribuição](#contribuição)
-- [Autor](#autor)
-- [Licença](#licença)
 
 ## 🎯 Sobre o Projeto
 
