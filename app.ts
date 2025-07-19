@@ -87,6 +87,7 @@ async function listarPostagens(): Promise<void> {
             );
         }
 
+        // Pega a div de postagens e renderiza as postagens filtradas
         const postagensElement = getById('postagens');
         if (postagensElement) {
             postagensElement.innerHTML = ''; // Limpa a lista

@@ -65,6 +65,7 @@ function listarPostagens() {
                     postagem.conteudo.toLowerCase().includes(termoPesquisa) ||
                     postagem.comentarios.some(comentario => comentario.autor.toLowerCase().includes(termoPesquisa)));
             }
+            // Pega a div de postagens e renderiza as postagens filtradas
             const postagensElement = getById('postagens');
             if (postagensElement) {
                 postagensElement.innerHTML = ''; // Limpa a lista
