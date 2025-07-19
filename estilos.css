@@ -341,6 +341,11 @@ footer p {
     margin: 0;
     color: var(--cor-texto-secundario);
 }
+
+.comentario-data {
+    color: var(--cor-texto-secundario);
+}
+
 .comentario p strong {
     color: var(--cor-texto);
 }

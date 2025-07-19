@@ -82,7 +82,8 @@ async function listarPostagens(): Promise<void> {
                 postagem.titulo.toLowerCase().includes(termoPesquisa) ||
                 postagem.conteudo.toLowerCase().includes(termoPesquisa) ||
                 postagem.comentarios.some(comentario =>
-                    comentario.autor.toLowerCase().includes(termoPesquisa)
+                    comentario.autor.toLowerCase().includes(termoPesquisa) ||
+                    comentario.conteudo.toLowerCase().includes(termoPesquisa)
                 )
             );
         }
@@ -135,7 +136,10 @@ function criarElementoPostagem(postagem: Postagem): HTMLElement {
                 <div class="comentarios-conteudo" style="display: none;">
                     <div id="comentarios-list-${postagem._id}">
                     ${postagem.comentarios && postagem.comentarios.length > 0 ? 
-                        postagem.comentarios.map(c => criarHtmlComentario(postagem._id, c)).join('') : 
+                        postagem.comentarios
+                        .slice() // cria uma cópia para não alterar o array original
+                        .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
+                        .map(c => criarHtmlComentario(postagem._id, c)).join('') : 
                         '<p class="sem-comentarios">Ainda não há comentários.</p>'
                     }
                     </div>
@@ -218,6 +222,7 @@ function criarHtmlComentario(postId: string, comentario: Comentario): string {
         <div class="comentario" id="comentario-${comentario._id}">
             <p><strong>${comentario.autor}</strong> disse:</p>
             <p>${comentario.conteudo}</p>
+            <small class="comentario-data">${new Date(comentario.data).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</small>
             <button class="botao-excluir-comentario" data-comentario-id="${comentario._id}">Excluir</button>
         </div>
     `;
@@ -325,8 +330,8 @@ async function adicionarComentario(postId: string, autor: string, conteudo: stri
                 semComentariosMsg.remove();
             }
 
-            // Adiciona o HTML do novo comentário ao final da lista
-            comentariosList.insertAdjacentHTML('beforeend', criarHtmlComentario(postId, novoComentario));
+            // Adiciona o HTML do novo comentário no início da lista
+            comentariosList.insertAdjacentHTML('afterbegin', criarHtmlComentario(postId, novoComentario));
 
             // Adiciona o listener de evento para o botão de excluir do novo comentário
             const novoBotaoExcluir = comentariosList.querySelector(`[data-comentario-id="${novoComentario._id}"]`);
